@@ -1,0 +1,17 @@
+<resources>
+    <string name="app_name">ToDoList</string>
+
+    <string name="titleTextViewText">Hello World!</string>
+    <string name="nameTextViewText">Name</string>
+    <string name="btnListText">List</string>
+
+    <string name="listTitleText">Hello!</string>
+    <string name="btnBackText">Back</string>
+    <string name="btnResetText">Reset</string>
+
+    <string name="TVTitleEdit">Edit</string>
+    <string name="TVTitleAdd">Add</string>
+    <string name="ETTextDesc">Enter Title Here</string>
+    <string name="btnSubmitText">Submit</string>
+
+</resources>
