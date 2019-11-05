@@ -4,6 +4,7 @@
     <string name="titleTextViewText">Hello World!</string>
     <string name="nameTextViewText">Name</string>
     <string name="btnListText">List</string>
+    <string name="btnPhoneText">Phone</string>
 
     <string name="listTitleText">Hello!</string>
     <string name="btnBackText">Back</string>
@@ -13,5 +14,8 @@
     <string name="TVTitleAdd">Add</string>
     <string name="ETTextDesc">Enter Title Here</string>
     <string name="btnSubmitText">Submit</string>
+    <string name="lastItemWarning">You are not allowed to remove the last item in the list!</string>
+
+    <string name="phoneTitleText">My Contacts</string>
 
 </resources>

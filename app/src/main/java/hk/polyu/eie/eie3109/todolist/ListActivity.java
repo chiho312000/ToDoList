@@ -26,14 +26,13 @@ public class ListActivity extends AppCompatActivity
     private ArrayList<String> myStringList;
     private ArrayAdapter<String> myAdapter;
     private SharedPreferences.Editor editor;
-
+    private boolean allowRemove = true;
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
         Button btnBack = findViewById(R.id.btnBack);
-        Button btnReset = findViewById(R.id.btnReset);
         TextView TVMessage = findViewById(R.id.TVMessage);
 
         if (btnBack != null)
@@ -48,18 +47,6 @@ public class ListActivity extends AppCompatActivity
             });
         }
 
-        if (btnReset != null)
-        {
-            btnReset.setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View v)
-                {
-                    resetStringList();
-                }
-            });
-        }
-
         Context c;
         try
         {
@@ -67,15 +54,16 @@ public class ListActivity extends AppCompatActivity
             SharedPreferences sharedPreferences = c.getSharedPreferences(MainActivity.PREFERENCE_NAME, MainActivity.MODE);
             String name = sharedPreferences.getString("Name", "Default Name");
             editor = sharedPreferences.edit();
-            String stringList = sharedPreferences.getString(MYSTRINGLIST_KEY, "Default Name");
+            String stringList = sharedPreferences.getString(MYSTRINGLIST_KEY, "null");
             if (stringList.equals("null"))
             {
                 resetStringList();
             }
             else
             {
-                myStringList = mapStringList(stringList, ";");
+                myStringList = mapStringList(stringList, ';');
             }
+            allowRemove = myStringList.size() > 1;
             if (TVMessage != null)
             {
                 String message = "Hi! " + name;
@@ -99,9 +87,8 @@ public class ListActivity extends AppCompatActivity
                 AlertDialog.Builder builder = new AlertDialog.Builder(ListActivity.this);
                 ListView options = new ListView(ListActivity.this);
                 final String[] choices = new String[]{"Add", "Edit", "Remove"};
-                options.setAdapter(new ArrayAdapter<String>(ListActivity.this, android.R.layout.simple_list_item_1, choices));
+                options.setAdapter(new ArrayAdapter<>(ListActivity.this, android.R.layout.simple_list_item_1, choices));
                 builder.setView(options);
-
                 final Dialog dialog = builder.create();
                 dialog.show();
                 final int currentPos = position;
@@ -119,10 +106,18 @@ public class ListActivity extends AppCompatActivity
                                 configEditDialog(currentPos, position);
                                 break;
                             case 2: // remove
-                                myStringList.remove(currentPos);
-                                updateStringList();
+                                if (allowRemove)
+                                {
+                                    myStringList.remove(currentPos);
+                                    updateStringList();
+                                }
+                                else
+                                {
+                                    Toast.makeText(getApplicationContext(), R.string.lastItemWarning, Toast.LENGTH_SHORT).show();
+                                }
                                 break;
                         }
+                        allowRemove = myStringList.size() > 1;
                         dialog.dismiss();
                     }
                 });
@@ -140,7 +135,7 @@ public class ListActivity extends AppCompatActivity
 
     private void updateStringList()
     {
-        String stringList = reduceStringList(myStringList, ";");
+        String stringList = reduceStringList(myStringList, ';');
         editor.putString(MYSTRINGLIST_KEY, stringList);
         editor.apply();
         myAdapter.notifyDataSetInvalidated();
@@ -156,7 +151,7 @@ public class ListActivity extends AppCompatActivity
         updateStringList();
     }
 
-    private String reduceStringList(ArrayList<String> stringList, String delimiter)
+    private String reduceStringList(ArrayList<String> stringList, char delimiter)
     {
         String result = "";
         for (String s : stringList)
@@ -166,13 +161,13 @@ public class ListActivity extends AppCompatActivity
         return result.substring(0, result.length() - 1);
     }
 
-    private ArrayList<String> mapStringList(String s, String delimiter)
+    private ArrayList<String> mapStringList(String s, char delimiter)
     {
         ArrayList<String> result = new ArrayList<>();
         String temp = "";
         for (char c : s.toCharArray())
         {
-            if (c != ';')
+            if (c != delimiter)
             {
                 temp += c;
             }
@@ -182,6 +177,7 @@ public class ListActivity extends AppCompatActivity
                 temp = "";
             }
         }
+        result.add(temp);
         return result;
     }
 

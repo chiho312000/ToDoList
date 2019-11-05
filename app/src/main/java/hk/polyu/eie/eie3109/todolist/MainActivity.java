@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button btnList = findViewById(R.id.btnList);
+        Button btnPhone = findViewById(R.id.btnPhone);
         TextView TVName = findViewById(R.id.nameTextView);
         Context c = null;
         try
@@ -45,6 +46,17 @@ public class MainActivity extends AppCompatActivity
                         public void onClick(View v)
                         {
                             startActivity(new Intent(MainActivity.this, ListActivity.class));
+                        }
+                    });
+                }
+                if (btnPhone != null)
+                {
+                    btnPhone.setOnClickListener(new View.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(View view)
+                        {
+                            startActivity(new Intent(MainActivity.this, PhoneActivity.class));
                         }
                     });
                 }
